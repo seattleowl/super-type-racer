@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
         }
         races[data.raceid].racers[data.username] = 0
         socket.emit("join_response", { value: "JOINED", data: races[data.raceid] })
-        socket.broadcast("join")
+        socket.broadcast.emit("join", data.username)
     })
 })
 

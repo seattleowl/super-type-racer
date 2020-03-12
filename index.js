@@ -7,9 +7,10 @@ let races = {
     2031: {
         name: "TEST RACE",
         txt: "Typing Racers",
-        racers: []
+        racers: {}
     }
 }
+let total_online = {}
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html")
@@ -20,9 +21,18 @@ io.on("connection", (socket) => {
         if (!races[data.raceid]) {
             socket.emit("join_response", { value: "IDNOTFOUND" })
         }
-        races[data.raceid].racers[data.username] = 0
+        races[data.raceid].racers[socket.id] = { username: data.username, score: 0 }
+        total_online[socket.id] = data.raceid
         socket.emit("join_response", { value: "JOINED", data: races[data.raceid] })
         socket.broadcast.emit("join", data.username)
+    })
+    
+    socket.on("disconnect", () => {
+        if (total_online[socket.id]) {
+            delete races[total_online[socket.id]].racers[socket.id]
+            delete total_online[socket.id]
+            console.log(`All races: ${JSON.stringify(races)}, Players: ${JSON.stringify(total_online)}`)
+        }
     })
 })
 

@@ -7,10 +7,14 @@
     <title>Super Typing Racer!</title>
 </head>
 <body>
-    
+    <a id="join">Join a race</a>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    var socket = io();
+    // Protect socket.io
+    join.onclick = () => {
+        const socket = io();
+        socket.emit("join", {username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)")})
+    }
 </script>
 </html>

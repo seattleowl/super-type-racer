@@ -8,13 +8,28 @@
 </head>
 <body>
     <a id="join">Join a race</a>
+    <div id="race" style="display:none;">
+        <h3 id="race_title">...</h3>
+    </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     // Protect socket.io
-    join.onclick = () => {
+    (() => {
         const socket = io();
-        socket.emit("join", {username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)")})
-    }
+        let racer_data
+        join.onclick = () => {
+            racer_data = { username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)") }
+            socket.emit("join", racer_data)
+        }
+        socket.on("join_response", (responce) => {
+            if (responce.data.value == "IDNOTFOUND") {
+                join.innerHTML = "Race not found, Please check your id.<br>Click on this to try again."
+            }
+            join.style.display = "none"
+            race.style.display = "block"
+            race_title.innerHTML = responce.data
+        })
+    })()
 </script>
 </html>

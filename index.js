@@ -17,8 +17,12 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
     socket.on("join", (data) => {
+        if (!races[data.raceid]) {
+            socket.emit("join_response", { value: "IDNOTFOUND" })
+        }
         races[data.raceid].racers[data.username] = 0
-        io.emit("join")
+        socket.emit("join_response", { value: "JOINED", data: races[data.raceid] })
+        socket.broadcast("join")
     })
 })
 

@@ -4,7 +4,7 @@ const app = express()
 const server = http.createServer(app)
 
 app.get("/", (req, res) => {
-    res.send("0_0")
+    res.sendFile(__dirname + "/index.html")
 })
 
 server.listen(process.env.PORT, () => {

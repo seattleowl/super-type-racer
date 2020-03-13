@@ -33,8 +33,8 @@ io.on("connection", (socket) => {
             id = Math.round(Math.random() * 8999) + 1000
         } while (!races[id]);
         races[id] = {
-            name: data.race.name,
-            name: data.race.name,
+            name: data.name,
+            txt: data.txt,
             racers: {}
         }
         races[id].racers[socket.id] = { username: data.username, score: 0 }

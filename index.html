@@ -11,6 +11,7 @@
             background: rgb(168, 223, 161);
             border-radius: 4px;
             padding: 2px;
+            padding-right: 0;
         }
 
         #target_txt {
@@ -63,8 +64,8 @@
                     target_txt.innerHTML = target_txt.innerHTML.substr(1)
                     typed++
                     if (typed == target.length) {
+                        socket.emit("win")
                         setTimeout(() => {
-                            socket.emit("win")
                             join.style.display = "block"
                             race.style.display = "none"
 

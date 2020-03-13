@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("win", () => {
+        delete races[total_online[socket.id]]
         socket.broadcast.emit("lose")
     })
 })

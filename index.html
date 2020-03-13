@@ -13,6 +13,10 @@
             padding: 2px;
         }
 
+        #target_txt {
+            display: inline
+        }
+
         #join {
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -24,8 +28,7 @@
     <div id="race" style="display:none;">
         <h3 id="race_title">...</h3>
         <br>
-        <p id="target_txt"><span id="typed_txt"></span></p>
-        <p id="typing"></p>
+        <span id="typed_txt"></span><p id="target_txt"></p>
     </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
@@ -47,7 +50,7 @@
             join.style.display = "none"
             race.style.display = "block"
             race_title.innerHTML = responce.data.name
-            target_txt.innerHTML = "<span id='typed_txt'></span>" + responce.data.txt
+            target_txt.innerHTML = responce.data.txt
             typed_txt.innerHTML = ""
             target = responce.data.txt
             typed = 0
@@ -56,8 +59,7 @@
             window.onkeypress = (e) => {
                 if (target[typed] == e.key) {
                     // Correct key.
-                    typing.innerHTML += e.key
-                    typed_txt.innerHTML += target[0]
+                    typed_txt.innerHTML += e.key
                     target_txt.innerHTML = target_txt.innerHTML.substr(1)
                     typed++
                     if (typed == target.length) {

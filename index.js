@@ -38,9 +38,10 @@ io.on("connection", (socket) => {
             racers: {}
         }
         races[id].racers[socket.id] = { username: data.username, score: 0 }
-        total_online[socket.id] = data.raceid
+        total_online[socket.id] = id
         socket.emit("join_response", { value: "IDCREATED", data: { ...races[id], id } })
         socket.broadcast.emit("join", data.username)
+        console.log("Races: " + JSON.stringify(races))
     })
     
     socket.on("disconnect", () => {
@@ -48,6 +49,7 @@ io.on("connection", (socket) => {
             delete races[total_online[socket.id]].racers[socket.id]
             if (races[total_online[socket.id]].racers.length == 0) {
                 delete races[total_online[socket.id]]
+                console.log("Races: " + JSON.stringify(races))
             }
             delete total_online[socket.id]
         }
@@ -58,6 +60,7 @@ io.on("connection", (socket) => {
             delete total_online[racer]
         })
         delete races[total_online[socket.id]]
+        console.log("Races: " + JSON.stringify(races))
         socket.broadcast.emit("lose")
     })
 })

@@ -102,6 +102,7 @@
         })
         socket.on("lose", () => {
             join.style.display = "block"
+            create.style.display = "block"
             race.style.display = "none"
 
             join.innerHTML = "You lost. Click here to join another race."

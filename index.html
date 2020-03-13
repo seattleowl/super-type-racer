@@ -37,6 +37,7 @@
             target_txt.innerHTML = responce.data.txt
             target = responce.data.txt
             typed = 0
+            console.log(target)
 
             window.onkeypress = (e) => {
                 if (target[typed] == e.key) {
@@ -52,6 +53,7 @@
                     }
                 } else {
                     // WRONG!
+                    
                 }
             }
         })

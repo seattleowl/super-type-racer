@@ -15,10 +15,10 @@
         }
 
         #target_txt {
-            display: inline
+            display: inline;
         }
 
-        #join {
+        #join, #create {
             font-family: Arial, Helvetica, sans-serif;
         }
     </style>
@@ -26,6 +26,7 @@
 </head>
 <body>
     <a id="join">Join a race</a>
+    <a id="create">Or create one.</a>
     <div id="race" style="display:none;">
         <h3 id="race_title">...</h3>
         <br>
@@ -36,7 +37,7 @@
 <script>
     // Protect socket.io
     (() => {
-        const socket = io();
+        const socket = io()
         let racer_data
         let target = ""
         let typed = ""
@@ -44,18 +45,27 @@
             racer_data = { username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)") }
             socket.emit("join", racer_data)
         }
+
+        create.onclick = () => {
+            racer_data = { username: prompt("Enter your name:") }
+            socket.emit("create", { ...racer_data, name: prompt("Race name:"), txt: prompt("Race words:") })
+        }
         socket.on("join_response", (responce) => {
             if (responce.value == "IDNOTFOUND") {
                 join.innerHTML = "Race not found, Please check your id.<br>Click on this to try again."
+                join.style.display = "block"
+                create.style.display = "block"
+                race.style.display = "none"
+                return
             }
             join.style.display = "none"
+            create.style.display = "none"
             race.style.display = "block"
             race_title.innerHTML = responce.data.name
             target_txt.innerHTML = responce.data.txt
             typed_txt.innerHTML = ""
             target = responce.data.txt
             typed = 0
-            console.log(target)
 
             window.onkeypress = (e) => {
                 if (target[typed] == e.key) {
@@ -67,11 +77,11 @@
                         socket.emit("win")
                         setTimeout(() => {
                             join.style.display = "block"
+                            create.style.display = "block"
                             race.style.display = "none"
 
                             join.innerHTML = "You won! Click here to join another race."
-                            typing.innerHTML = ""
-                        }, 1000);
+                        }, 1000)
                     }
                 } else {
                     // WRONG!

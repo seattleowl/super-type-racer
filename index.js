@@ -26,6 +26,21 @@ io.on("connection", (socket) => {
         socket.emit("join_response", { value: "JOINED", data: races[data.raceid] })
         socket.broadcast.emit("join", data.username)
     })
+    socket.on("create", (data) => {
+        let id
+        do {
+            id = Math.round(Math.random() * 8999) + 1000
+        } while (!races[id]);
+        races[id] = {
+            name: data.race.name,
+            name: data.race.name,
+            racers: {}
+        }
+        races[id].racers[socket.id] = { username: data.username, score: 0 }
+        total_online[socket.id] = data.raceid
+        socket.emit("join_response", { value: "JOINED", data: races[id] })
+        socket.broadcast.emit("join", data.username)
+    })
     
     socket.on("disconnect", () => {
         if (total_online[socket.id]) {
@@ -35,6 +50,9 @@ io.on("connection", (socket) => {
     })
 
     socket.on("win", () => {
+        Object.keys(races[total_online[socket.id]].racers).forEach(racer => {
+            delete total_online[racer]
+        })
         delete races[total_online[socket.id]]
         socket.broadcast.emit("lose")
     })

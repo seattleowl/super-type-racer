@@ -10,6 +10,9 @@
     <a id="join">Join a race</a>
     <div id="race" style="display:none;">
         <h3 id="race_title">...</h3>
+        <br>
+        <p id="target_txt"></p>
+        <p id="typing"></p>
     </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
@@ -18,17 +21,45 @@
     (() => {
         const socket = io();
         let racer_data
+        let target = ""
+        let typed = ""
         join.onclick = () => {
             racer_data = { username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)") }
             socket.emit("join", racer_data)
         }
         socket.on("join_response", (responce) => {
-            if (responce.data.value == "IDNOTFOUND") {
+            if (responce.value == "IDNOTFOUND") {
                 join.innerHTML = "Race not found, Please check your id.<br>Click on this to try again."
             }
             join.style.display = "none"
             race.style.display = "block"
             race_title.innerHTML = responce.data.name
+            target_txt.innerHTML = responce.data.txt
+            target = responce.data.txt
+            typed = 0
+
+            window.onkeypress = (e) => {
+                if (target[typed] == e.key) {
+                    // Correct key.
+                    typing.innerHTML += e.key
+                    typed++
+                    if (typed == target.length) {
+                        socket.emit("win")
+                        join.style.display = "block"
+                        race.style.display = "none"
+
+                        join.innerHTML = "You won! Click here to join another race."
+                    }
+                } else {
+                    // WRONG!
+                }
+            }
+        })
+        socket.on("lose", () => {
+            join.style.display = "block"
+            race.style.display = "none"
+
+            join.innerHTML = "You lost. Click here to join another race."
         })
     })()
 </script>

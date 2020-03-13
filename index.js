@@ -31,8 +31,11 @@ io.on("connection", (socket) => {
         if (total_online[socket.id]) {
             delete races[total_online[socket.id]].racers[socket.id]
             delete total_online[socket.id]
-            console.log(`All races: ${JSON.stringify(races)}, Players: ${JSON.stringify(total_online)}`)
         }
+    })
+
+    socket.on("win", () => {
+        socket.broadcast.emit("lose")
     })
 })
 

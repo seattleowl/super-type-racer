@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
     socket.on("win", () => {
         let race = races[total_online[socket.id]]
         delete races[total_online[socket.id]]
-        Object.keys(race.racers).forEach(racer => {
+        (Object.keys(race.racers) || []).forEach(racer => {
             delete total_online[racer]
         })
         console.log("Races: " + JSON.stringify(races))

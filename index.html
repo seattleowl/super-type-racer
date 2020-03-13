@@ -62,11 +62,16 @@
             }
             join.style.display = "none"
             create.style.display = "none"
+            typed_txt.style.display = "none"
             race.style.display = "block"
+            if (Object.keys(responce.data.racers).length == 1) {
+                race_title.innerHTML = "Wating for players..."
+                return
+            }
+
             race_title.innerHTML = responce.data.name
             target_txt.innerHTML = responce.data.txt
             typed_txt.innerHTML = ""
-            typed_txt.style.display = "none"
             target = responce.data.txt
             typed = 0
 

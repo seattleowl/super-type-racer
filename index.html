@@ -25,8 +25,8 @@
     <title>Super Typing Racer!</title>
 </head>
 <body>
-    <a id="join">Join a race</a>
-    <a id="create">Or create one.</a>
+    <a id="join">Join a race</a><br>
+    <a id="create">Create a race</a>
     <div id="race" style="display:none;">
         <h3 id="race_title">...</h3>
         <br>
@@ -57,6 +57,8 @@
                 create.style.display = "block"
                 race.style.display = "none"
                 return
+            } else if (responce.value == "IDCREATED") {
+                alert(`Race ID: ${responce.data.id}`)
             }
             join.style.display = "none"
             create.style.display = "none"

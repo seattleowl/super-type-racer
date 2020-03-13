@@ -20,6 +20,7 @@ io.on("connection", (socket) => {
     socket.on("join", (data) => {
         if (!races[data.raceid]) {
             socket.emit("join_response", { value: "IDNOTFOUND" })
+            return
         }
         races[data.raceid].racers[socket.id] = { username: data.username, score: 0 }
         total_online[socket.id] = data.raceid
@@ -38,7 +39,7 @@ io.on("connection", (socket) => {
         }
         races[id].racers[socket.id] = { username: data.username, score: 0 }
         total_online[socket.id] = data.raceid
-        socket.emit("join_response", { value: "JOINED", data: races[id] })
+        socket.emit("join_response", { value: "IDCREATED", data: { ...races[id], id } })
         socket.broadcast.emit("join", data.username)
     })
     

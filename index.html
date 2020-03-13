@@ -42,6 +42,31 @@
         let responce_data
         let target = ""
         let typed = ""
+
+        function keypress(e) {
+            if (target[typed] == e.key) {
+                // Correct key.
+                typed_txt.style.display = "inline"
+                typed_txt.innerHTML += e.key
+                target_txt.innerHTML = target_txt.innerHTML.substr(1)
+                typed++
+                if (typed == target.length) {
+                    socket.emit("win")
+                    setTimeout(() => {
+                        join.style.display = "block"
+                        create.style.display = "block"
+                        race.style.display = "none"
+
+                        join.innerHTML = "You won! Click here to join another race."
+                        window.removeEventListener("keypress", keypress)
+                    }, 1000)
+                }
+            } else {
+                // WRONG!
+
+            }
+        }
+
         join.onclick = () => {
             racer_data = { username: prompt("Enter your name:"), raceid: prompt("Your race id: (Contact the host for more information)") }
             socket.emit("join", racer_data)
@@ -77,28 +102,7 @@
             target = responce.data.txt
             typed = 0
 
-            window.onkeypress = (e) => {
-                if (target[typed] == e.key) {
-                    // Correct key.
-                    typed_txt.style.display = "inline"
-                    typed_txt.innerHTML += e.key
-                    target_txt.innerHTML = target_txt.innerHTML.substr(1)
-                    typed++
-                    if (typed == target.length) {
-                        socket.emit("win")
-                        setTimeout(() => {
-                            join.style.display = "block"
-                            create.style.display = "block"
-                            race.style.display = "none"
-
-                            join.innerHTML = "You won! Click here to join another race."
-                        }, 1000)
-                    }
-                } else {
-                    // WRONG!
-                    
-                }
-            }
+            window.onkeypress = keypress
         })
         socket.on("lose", () => {
             join.style.display = "block"
@@ -106,6 +110,8 @@
             race.style.display = "none"
 
             join.innerHTML = "You lost. Click here to join another race."
+
+            window.removeEventListener("keypress", keypress)
         })
 
         socket.on("join", () => {
@@ -130,28 +136,7 @@
                 target = responce_data.data.txt
                 typed = 0
 
-                window.onkeypress = (e) => {
-                    if (target[typed] == e.key) {
-                        // Correct key.
-                        typed_txt.style.display = "inline"
-                        typed_txt.innerHTML += e.key
-                        target_txt.innerHTML = target_txt.innerHTML.substr(1)
-                        typed++
-                        if (typed == target.length) {
-                            socket.emit("win")
-                            setTimeout(() => {
-                                join.style.display = "block"
-                                create.style.display = "block"
-                                race.style.display = "none"
-
-                                join.innerHTML = "You won! Click here to join another race."
-                            }, 1000)
-                        }
-                    } else {
-                        // WRONG!
-
-                    }
-                }
+                window.onkeypress = keypress
             }
         })
     })()

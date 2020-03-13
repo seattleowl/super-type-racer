@@ -46,6 +46,9 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         if (total_online[socket.id]) {
             delete races[total_online[socket.id]].racers[socket.id]
+            if (races[total_online[socket.id]].racers.length == 0) {
+                delete races[total_online[socket.id]]
+            }
             delete total_online[socket.id]
         }
     })

@@ -39,6 +39,7 @@
     (() => {
         const socket = io()
         let racer_data
+        let responce_data
         let target = ""
         let typed = ""
         join.onclick = () => {
@@ -66,6 +67,7 @@
             race.style.display = "block"
             if (Object.keys(responce.data.racers).length == 1) {
                 race_title.innerHTML = "Wating for players..."
+                responce_data = responce
                 return
             }
 
@@ -107,28 +109,24 @@
 
         socket.on("join", () => {
             if (race_title.innerHTML == "Wating for players...") {
-                if (responce.value == "IDNOTFOUND") {
+                if (responce_data.value == "IDNOTFOUND") {
                     join.innerHTML = "Race not found, Please check your id.<br>Click on this to try again."
                     join.style.display = "block"
                     create.style.display = "block"
                     race.style.display = "none"
                     return
-                } else if (responce.value == "IDCREATED") {
-                    alert(`Race ID: ${responce.data.id}`)
+                } else if (responce_data.value == "IDCREATED") {
+                    alert(`Race ID: ${responce_data.data.id}`)
                 }
                 join.style.display = "none"
                 create.style.display = "none"
                 typed_txt.style.display = "none"
                 race.style.display = "block"
-                if (Object.keys(responce.data.racers).length == 1) {
-                    race_title.innerHTML = "Wating for players..."
-                    return
-                }
 
-                race_title.innerHTML = responce.data.name
-                target_txt.innerHTML = responce.data.txt
+                race_title.innerHTML = responce_data.data.name
+                target_txt.innerHTML = responce_data.data.txt
                 typed_txt.innerHTML = ""
-                target = responce.data.txt
+                target = responce_data.data.txt
                 typed = 0
 
                 window.onkeypress = (e) => {
